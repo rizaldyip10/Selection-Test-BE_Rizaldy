@@ -4,7 +4,6 @@ const { User, Attendance } = require('../models')
 module.exports = {
     clockInOT: async (req, res) => {
         try {
-            const note = req.body.note
             const checkUser = await User.findOne({
                 where: {
                     id: req.user.id
@@ -84,7 +83,6 @@ module.exports = {
                     }
                 }
             })
-
             if (checkClockOutOT) throw { message: "You have clocked out for overtime" }
 
             const date = new Date()

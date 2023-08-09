@@ -9,7 +9,7 @@ module.exports = {
             const offset = (page - 1) * limit;
             const search = req.query.search
             const sort = req.query.sort || "ASC"
-            const sortBy = req.query.sort || "firstName"
+            const sortBy = req.query.sortBy || "firstName"
             const condition = { isDeleted: false, isSuspended: false, isAdmin: false };
 
             if (search) {

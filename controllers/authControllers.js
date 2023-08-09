@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const { User } = require('../models')
+const { User, Token } = require('../models')
 const fs = require('fs')
 const handlebars = require('handlebars')
 const transporter = require('../middlewares/transporter')
@@ -13,6 +13,14 @@ module.exports = {
             const isPhoneExist = await User.findOne({ where: { phone } })
             if (isPhoneExist) throw { message: "Phone number already taken" }
 
+            const isTokenExist = await Token.findOne({
+                where: {
+                    token: req.token
+                }
+            })
+            if (isTokenExist) throw { message: "Link is Expired" }
+            await Token.create({ token: req.token })
+
             const salt = await bcrypt.genSalt(10)
             const hashPassword = await bcrypt.hash(password, salt)
 
@@ -24,7 +32,7 @@ module.exports = {
                 phone,
                 gender,
                 birthdate: new Date(birthdate),
-                PositionId: req.user.posId
+                PositionId: +req.user.posId
             })
 
             res.status(200).send({
